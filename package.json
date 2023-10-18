@@ -61,6 +61,11 @@
     "link-direct-implementation": "pnpm hardhat run scripts/payoutStrategy/direct/linkDirectPayoutStrategyImplementation.ts --network",
     "create-direct-contract": "pnpm hardhat run scripts/payoutStrategy/direct/createDirectPayoutStrategy.ts --network"
   },
+  "pnpm": {
+    "overrides": {
+      "node-hid": "^2"
+    }
+  },
   "devDependencies": {
     "@ethersproject/constants": "^5.7.0",
     "@gnosis.pm/safe-contracts": "^1.3.0",
