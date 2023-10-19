@@ -18,7 +18,7 @@ dotenv.config();
 const chainIds = {
   // local
   localhost: 31337,
-  dev: 31337,
+  dev: 313371,
   // testnet
   goerli: 5,
   "optimism-goerli": 420,

@@ -21,4 +21,4 @@ RUN pnpm hardhat compile
 
 EXPOSE 8545/tcp
 
-CMD ~/.foundry/bin/anvil --host 0.0.0.0
+CMD ~/.foundry/bin/anvil --host 0.0.0.0 --chain-id 313371
