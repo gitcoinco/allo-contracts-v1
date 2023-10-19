@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  localchain:
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile
+    ports:
+      - '127.0.0.1:8545:8545'
+
+  localchain-init:
+    image: node:20-slim
+    depends_on:
+      - localchain
+    environment:
+      - PNPM_HOME=/pnpm
+    volumes:
+      # protect the work directory from being messed with
+      - '.:/app:ro'
+      # do all writes inside `.var`
+      - './.var/cache:/app/cache:rw'
+      - './.var/artifacts:/app/artifacts:rw'
+      - './.var/typechain:/app/typechain:rw'
+      - './.var/docs:/app/docs:rw'
+    working_dir: /app
+    restart: "no"
+    entrypoint: [ "bash", "-c", "corepack enable && ./docker/deploy-contracts.sh"]
