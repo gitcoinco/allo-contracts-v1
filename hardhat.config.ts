@@ -199,7 +199,10 @@ const config: HardhatUserConfig = {
     localhost: createTestnetConfig("localhost", "http://localhost:8545"),
     // dev is still a local chain but it's based on our dev environment
     // with hardcoded deterministic addresses for deployed contracts
-    dev: createTestnetConfig("dev", "http://localhost:8545"),
+    dev: createTestnetConfig(
+      "dev",
+      `http://${process.env.DEV_CHAIN_HOST ?? "localhost"}:8545`
+    ),
     hardhat: {
       forking: {
         url: `${process.env.FORK_RPC_URL}`,
