@@ -22,7 +22,7 @@ async function main() {
 
   await projectRegistry.createProject({
     protocol: 1,
-    pointer: "bafkreibqdvodcxbpcf2x7yrgqilvyysknrerlv25f7gnbhqnoo3jxoc274",
+    pointer: "QmWnDfdggaDkoQQ1r8fSUr6f2yN25ERqAtbYbDtdxTrvUx",
   });
 
   console.log("Chain populated");
