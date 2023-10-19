@@ -1,6 +1,7 @@
 export SKIP_CONFIRMATIONS=true
 
 pnpm run deploy-project-registry dev
+pnpm hardhat run scripts/dev/populate/projects.ts --network dev
 
 pnpm run deploy-program-factory dev
 pnpm run deploy-program-implementation dev
@@ -30,5 +31,3 @@ pnpm run link-allo-settings dev
 # pnpm run create-qf-contract dev
 # pnpm run create-merkle-contract dev
 # pnpm run create-round dev
-
-pnpm hardhat run scripts/dev/populate.ts --network dev

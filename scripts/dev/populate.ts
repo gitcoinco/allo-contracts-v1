@@ -1,6 +1,8 @@
 import hre, { ethers } from "hardhat";
 
 async function main() {
+  console.log("🟡 Creating projects");
+
   if (hre.network.name !== "dev") {
     console.error("This script can only be use in local dev environments");
     process.exit(1);
@@ -25,7 +27,7 @@ async function main() {
     pointer: "QmWnDfdggaDkoQQ1r8fSUr6f2yN25ERqAtbYbDtdxTrvUx",
   });
 
-  console.log("Chain populated");
+  console.log("✅ Projects created");
 }
 
 main().catch((error) => {
