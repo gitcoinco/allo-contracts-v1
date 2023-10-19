@@ -7,6 +7,7 @@ RUN apt-get clean && \
 COPY ../ /app
 WORKDIR /app
 
+ENV DEV_CHAIN_ID=313371
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 RUN corepack enable
@@ -21,4 +22,4 @@ RUN pnpm hardhat compile
 
 EXPOSE 8545/tcp
 
-CMD ~/.foundry/bin/anvil --host 0.0.0.0 --chain-id 313371
+CMD ./docker/start-chain.sh

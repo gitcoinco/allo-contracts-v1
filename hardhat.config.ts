@@ -15,10 +15,19 @@ import "solidity-coverage";
 
 dotenv.config();
 
+function getEnvVarNumber(name: string, defaultValue: number): number {
+  const value = process.env[name];
+  if (value !== undefined) {
+    return parseInt(value);
+  }
+
+  return defaultValue;
+}
+
 const chainIds = {
   // local
   localhost: 31337,
-  dev: 313371,
+  dev: getEnvVarNumber("DEV_CHAIN_ID", 313371),
   // testnet
   goerli: 5,
   "optimism-goerli": 420,
