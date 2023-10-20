@@ -1,6 +1,6 @@
 export SKIP_CONFIRMATIONS=true
 
-TIMEFORMAT='(%3R seconds)';
+TIMEFORMAT='(🟢 %3R seconds)';
 
 time pnpm run deploy-project-registry dev
 time pnpm hardhat run scripts/dev/populate/projects.ts --network dev
