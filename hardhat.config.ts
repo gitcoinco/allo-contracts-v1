@@ -74,13 +74,14 @@ const alchemyKey = process.env.ALCHEMY_API_KEY as string;
  */
 function createTestnetConfig(
   network: keyof typeof chainIds,
-  url?: string
+  url?: string,
+  mnemonic?: string
 ): NetworkUserConfig {
   if (url === undefined) {
     url = `https://${network}.infura.io/v3/${infuraIdKey}`;
   }
   return {
-    accounts: [deployPrivateKey],
+    accounts: mnemonic ? { mnemonic } : [deployPrivateKey],
     chainId: chainIds[network],
     allowUnlimitedContractSize: true,
     url,
@@ -209,7 +210,8 @@ const config: HardhatUserConfig = {
     // with hardcoded deterministic addresses for deployed contracts
     dev: createTestnetConfig(
       "dev",
-      `http://${process.env.DEV_CHAIN_HOST ?? "localhost"}:8545`
+      `http://${process.env.DEV_CHAIN_HOST ?? "localhost"}:8545`,
+      "test test test test test test test test test test test junk"
     ),
     hardhat: {
       forking: {
