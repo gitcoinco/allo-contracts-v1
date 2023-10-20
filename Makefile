@@ -6,7 +6,7 @@ CONTAINER_NAME=allo
 docker-all: docker-kill docker-build docker-run docker-deploy-contracts
 
 docker-build:
-		docker build . -f ./docker/Dockerfile -t $(IMAGE_NAME) --no-cache --progress=plain
+		docker build . -t $(IMAGE_NAME) --no-cache --progress=plain
 
 docker-run:
 		docker run --name $(CONTAINER_NAME) --rm -d -p 127.0.0.1:8545:8545/tcp $(IMAGE_NAME)
