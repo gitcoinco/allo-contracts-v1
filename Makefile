@@ -21,4 +21,4 @@ docker-logs:
 		docker logs -f $(CONTAINER_NAME)
 
 docker-deploy-contracts:
-		docker exec allo sh ./docker/deploy-contracts.sh
+		docker exec allo bash ./docker/deploy-contracts.sh

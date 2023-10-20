@@ -1,31 +1,33 @@
 export SKIP_CONFIRMATIONS=true
 
-pnpm run deploy-project-registry dev
-pnpm hardhat run scripts/dev/populate/projects.ts --network dev
+TIMEFORMAT='(%3R seconds)';
 
-pnpm run deploy-program-factory dev
-pnpm run deploy-program-implementation dev
-pnpm run link-program-implementation dev
+time pnpm run deploy-project-registry dev
+time pnpm hardhat run scripts/dev/populate/projects.ts --network dev
 
-pnpm run deploy-qf-factory dev
-pnpm run deploy-qf-implementation dev
-pnpm run link-qf-implementation dev
+time pnpm run deploy-program-factory dev
+time pnpm run deploy-program-implementation dev
+time pnpm run link-program-implementation dev
 
-pnpm run deploy-merkle-factory dev
-pnpm run deploy-merkle-implementation dev
-pnpm run link-merkle-implementation dev
+time pnpm run deploy-qf-factory dev
+time pnpm run deploy-qf-implementation dev
+time pnpm run link-qf-implementation dev
 
-pnpm run deploy-direct-factory dev
-pnpm run deploy-direct-implementation dev
-pnpm run link-direct-implementation dev
+time pnpm run deploy-merkle-factory dev
+time pnpm run deploy-merkle-implementation dev
+time pnpm run link-merkle-implementation dev
 
-pnpm run deploy-allo-settings dev
-pnpm run set-protocol-fee dev
+time pnpm run deploy-direct-factory dev
+time pnpm run deploy-direct-implementation dev
+time pnpm run link-direct-implementation dev
 
-pnpm run deploy-round-factory dev
-pnpm run deploy-round-implementation dev
-pnpm run link-round-implementation dev
-pnpm run link-allo-settings dev
+time pnpm run deploy-allo-settings dev
+time pnpm run set-protocol-fee dev
+
+time pnpm run deploy-round-factory dev
+time pnpm run deploy-round-implementation dev
+time pnpm run link-round-implementation dev
+time pnpm run link-allo-settings dev
 
 # pnpm run create-program dev
 # pnpm run create-qf-contract dev
