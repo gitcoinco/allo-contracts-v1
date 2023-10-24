@@ -63,14 +63,16 @@ async function main() {
     "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0"
   );
 
-  for (let i = 1; i < 3; i++) {
-    const logo = loadFixture("images/400x400.svg");
+  for (let i = 1; i < 4; i++) {
+    const logo = loadFixture(`projects/${i}/logo.png`);
     const logoCid = await uploadFileToPinata(logo);
 
-    const banner = loadFixture("images/1500x500.svg");
+    const banner = loadFixture(`projects/${i}/banner.png`);
     const bannerCid = await uploadFileToPinata(banner);
 
-    const metadata = JSON.parse(loadFixture(`projects/${i}.json`).toString());
+    const metadata = JSON.parse(
+      loadFixture(`projects/${i}/metadata.json`).toString()
+    );
     metadata.logoImg = logoCid;
     metadata.bannerImg = bannerCid;
 
