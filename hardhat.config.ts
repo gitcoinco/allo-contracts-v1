@@ -210,7 +210,7 @@ const config: HardhatUserConfig = {
     // with hardcoded deterministic addresses for deployed contracts
     dev: createTestnetConfig(
       "dev",
-      `http://${process.env.DEV_CHAIN_HOST ?? "localhost"}:8545`,
+      `http://${process.env.DEV_CHAIN_HOST ?? "127.0.0.1"}:8545`,
       "test test test test test test test test test test test junk"
     ),
     hardhat: {

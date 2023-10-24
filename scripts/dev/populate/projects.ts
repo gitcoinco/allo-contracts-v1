@@ -1,4 +1,49 @@
 import hre, { ethers } from "hardhat";
+import fs from "fs";
+import path from "path";
+
+const pinataHost = process.env.PINATA_HOST;
+const pinataPort = process.env.PINATA_PORT;
+const pinataBaseUrl =
+  pinataHost !== undefined && pinataPort !== undefined
+    ? `http://${pinataHost}:${pinataPort}`
+    : undefined;
+
+function loadFixture(name: string): Buffer {
+  const p = path.resolve(__dirname, "../fixtures", `${name}`);
+  const data = fs.readFileSync(p);
+  return data;
+}
+
+async function uploadJSONToPinata(b: string) {
+  const { IpfsHash } = await fetch(`${pinataBaseUrl}/pinning/pinJSONToIPFS`, {
+    method: "POST",
+    headers: {
+      Origin: "http://localhost",
+      "Content-Type": "application/json",
+      Authorization: `Bearer development-token`,
+    },
+    body: b,
+  }).then((r) => r.json());
+
+  return IpfsHash;
+}
+
+async function uploadFileToPinata(b: Buffer) {
+  const body = new FormData();
+  body.append("file", new Blob([b]));
+
+  const { IpfsHash } = await fetch(`${pinataBaseUrl}/pinning/pinFileToIPFS`, {
+    method: "POST",
+    headers: {
+      Origin: "http://localhost",
+      Authorization: `Bearer development-token`,
+    },
+    body,
+  }).then((r) => r.json());
+
+  return IpfsHash;
+}
 
 async function main() {
   console.log("🟡 Creating projects");
@@ -16,20 +61,27 @@ async function main() {
     "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0"
   );
 
-  await projectRegistry.connect(account1).createProject({
-    protocol: 1,
-    pointer: "QmbxFwXhyTBVfxS5zDhKVB6GmdzcQRUNyTHbRNnxQ2iqDB",
-  });
+  if (pinataBaseUrl === undefined) {
+    return;
+  }
 
-  await projectRegistry.connect(account1).createProject({
-    protocol: 1,
-    pointer: "QmfXWmPeVHFk8UKRQp6gqfV5MDKj25W1AVtpHRi18nDkPG",
-  });
+  for (let i = 1; i < 3; i++) {
+    const logo = loadFixture("images/400x400.svg");
+    const logoCid = await uploadFileToPinata(logo);
 
-  await projectRegistry.connect(account2).createProject({
-    protocol: 1,
-    pointer: "QmPfuocTLNvBPqrCbTbQ4wV7tigFRkGVjKYj8ai9kPeUga",
-  });
+    const banner = loadFixture("images/1500x500.svg");
+    const bannerCid = await uploadFileToPinata(banner);
+
+    const metadata = JSON.parse(loadFixture(`projects/${i}.json`).toString());
+    metadata.logoImg = logoCid;
+    metadata.bannerImg = bannerCid;
+
+    const metadataCid = await uploadJSONToPinata(JSON.stringify(metadata));
+    await projectRegistry.connect(account1).createProject({
+      protocol: 1,
+      pointer: metadataCid,
+    });
+  }
 
   console.log("✅ Projects created");
 }
