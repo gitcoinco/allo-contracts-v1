@@ -49,6 +49,7 @@ async function uploadFileToPinata(b: Buffer) {
 
 async function main() {
   console.log(`🟡 Creating projects (pinataBaseUrl ${pinataBaseUrl})`);
+  const network = hre.network;
 
   const [account1, account2] = await ethers.getSigners();
 
@@ -73,6 +74,7 @@ async function main() {
     const metadata = JSON.parse(
       loadFixture(`projects/${i}/metadata.json`).toString()
     );
+    metadata.title = `${metadata.title} (${network.config.chainId})`;
     metadata.logoImg = logoCid;
     metadata.bannerImg = bannerCid;
 

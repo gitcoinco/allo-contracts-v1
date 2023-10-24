@@ -22,4 +22,4 @@ RUN pnpm hardhat compile
 
 EXPOSE 8545/tcp
 
-CMD ./docker/start-chain.sh
+ENTRYPOINT ./docker/start-chain.sh
