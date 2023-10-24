@@ -15,7 +15,7 @@ function loadFixture(name: string): Buffer {
   return data;
 }
 
-async function uploadJSONToPinata(b: string) {
+async function uploadJSONToPinata(content: any) {
   const { IpfsHash } = await fetch(`${pinataBaseUrl}/pinning/pinJSONToIPFS`, {
     method: "POST",
     headers: {
@@ -23,7 +23,9 @@ async function uploadJSONToPinata(b: string) {
       "Content-Type": "application/json",
       Authorization: `Bearer development-token`,
     },
-    body: b,
+    body: JSON.stringify({
+      pinataContent: content,
+    }),
   }).then((r) => r.json());
 
   return IpfsHash;
@@ -46,7 +48,7 @@ async function uploadFileToPinata(b: Buffer) {
 }
 
 async function main() {
-  console.log("🟡 Creating projects");
+  console.log(`🟡 Creating projects (pinataBaseUrl ${pinataBaseUrl})`);
 
   const [account1, account2] = await ethers.getSigners();
 
@@ -61,10 +63,6 @@ async function main() {
     "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0"
   );
 
-  if (pinataBaseUrl === undefined) {
-    return;
-  }
-
   for (let i = 1; i < 3; i++) {
     const logo = loadFixture("images/400x400.svg");
     const logoCid = await uploadFileToPinata(logo);
@@ -76,7 +74,7 @@ async function main() {
     metadata.logoImg = logoCid;
     metadata.bannerImg = bannerCid;
 
-    const metadataCid = await uploadJSONToPinata(JSON.stringify(metadata));
+    const metadataCid = await uploadJSONToPinata(metadata);
     await projectRegistry.connect(account1).createProject({
       protocol: 1,
       pointer: metadataCid,
