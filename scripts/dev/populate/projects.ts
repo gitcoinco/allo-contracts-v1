@@ -65,20 +65,25 @@ async function main() {
   );
 
   for (let i = 1; i < 4; i++) {
-    const logo = loadFixture(`projects/${i}/logo.png`);
-    const logoCid = await uploadFileToPinata(logo);
+    let metadataCid = "";
 
-    const banner = loadFixture(`projects/${i}/banner.png`);
-    const bannerCid = await uploadFileToPinata(banner);
+    if (pinataBaseUrl !== undefined) {
+      const logo = loadFixture(`projects/${i}/logo.png`);
+      const logoCid = await uploadFileToPinata(logo);
 
-    const metadata = JSON.parse(
-      loadFixture(`projects/${i}/metadata.json`).toString()
-    );
-    metadata.title = `${metadata.title} (${network.config.chainId})`;
-    metadata.logoImg = logoCid;
-    metadata.bannerImg = bannerCid;
+      const banner = loadFixture(`projects/${i}/banner.png`);
+      const bannerCid = await uploadFileToPinata(banner);
 
-    const metadataCid = await uploadJSONToPinata(metadata);
+      const metadata = JSON.parse(
+        loadFixture(`projects/${i}/metadata.json`).toString()
+      );
+      metadata.title = `${metadata.title} (${network.config.chainId})`;
+      metadata.logoImg = logoCid;
+      metadata.bannerImg = bannerCid;
+
+      metadataCid = await uploadJSONToPinata(metadata);
+    }
+
     await projectRegistry.connect(account1).createProject({
       protocol: 1,
       pointer: metadataCid,
