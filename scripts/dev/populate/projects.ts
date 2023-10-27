@@ -15,7 +15,7 @@ function loadFixture(name: string): Buffer {
   return data;
 }
 
-async function uploadJSONToPinata(content: any) {
+async function uploadJSONToPinata(content: any): Promise<string> {
   const { IpfsHash } = await fetch(`${pinataBaseUrl}/pinning/pinJSONToIPFS`, {
     method: "POST",
     headers: {
@@ -31,7 +31,7 @@ async function uploadJSONToPinata(content: any) {
   return IpfsHash;
 }
 
-async function uploadFileToPinata(b: Buffer) {
+async function uploadFileToPinata(b: Buffer): Promise<string> {
   const body = new FormData();
   body.append("file", new Blob([b]));
 
