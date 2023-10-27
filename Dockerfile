@@ -1,10 +1,10 @@
 FROM node:20-slim
 
-RUN apt-get clean && \
-    apt-get update && \
-    apt-get install -y python3 curl git build-essential psmisc
+RUN apt-get update && \
+    apt-get install -y python3 curl git build-essential psmisc && \
+    apt-get clean
 
-COPY ../ /app
+COPY . /app
 WORKDIR /app
 
 ENV DEV_CHAIN_ID=313371
