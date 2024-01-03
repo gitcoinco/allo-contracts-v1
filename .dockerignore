@@ -5,3 +5,4 @@ node_modules
 .openzeppelin*
 .upgradable
 .vscode
+Makefile
