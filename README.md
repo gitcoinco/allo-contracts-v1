@@ -105,18 +105,8 @@ To know the addresses are deployed on which network. refer [CHAINS.md](docs/CHAI
 
 To contribute to this project, fork the project and follow the instructions at [DEV.md](docs/DEV.md)
 
-You can run a local chain and deploy contracts using our docker configuration and tasks:
+Running `docker-compose up` it will run a local chain, deploy all the contracts, and populate them with test data.
 
-```
-# Build the docker image with the project deps + anvil
-make docker-build
-
-# run a containerized chain with anvil
-make docker-run
-
-# deploy the contracts to the containerized chain
-make docker-deploy-contracts
-```
 
 ## Contract Documentation
 
