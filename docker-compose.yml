@@ -14,6 +14,7 @@ services:
       - local-chain
     environment:
       # account at index 0 of the test mnemonic
+      # test test test test test test test test test test test junk
       - DEPLOYER_PRIVATE_KEY=0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80
       - DEV_CHAIN_HOST=local-chain
       - DEV_CHAIN_ID=313371
