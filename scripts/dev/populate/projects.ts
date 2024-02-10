@@ -51,7 +51,7 @@ async function main() {
   console.log(`🟡 Creating projects (pinataBaseUrl ${pinataBaseUrl})`);
   const network = hre.network;
 
-  const [account1, account2] = await ethers.getSigners();
+  const [account1] = await ethers.getSigners();
 
   if (hre.network.name !== "dev") {
     console.error("This script can only be use in local dev environments");
@@ -67,20 +67,21 @@ async function main() {
   for (let i = 1; i < 4; i++) {
     let metadataCid = "";
 
-    if (pinataBaseUrl !== undefined) {
+    if (pinataBaseUrl === undefined) {
+      console.warn(
+        "⚠️ Skipping upload to pinata, PINATA_HOST and PINATA_PORT not set"
+      );
+    } else {
       const logo = loadFixture(`projects/${i}/logo.png`);
       const logoCid = await uploadFileToPinata(logo);
-
       const banner = loadFixture(`projects/${i}/banner.png`);
       const bannerCid = await uploadFileToPinata(banner);
-
       const metadata = JSON.parse(
         loadFixture(`projects/${i}/metadata.json`).toString()
       );
       metadata.title = `${metadata.title} (${network.config.chainId})`;
       metadata.logoImg = logoCid;
       metadata.bannerImg = bannerCid;
-
       metadataCid = await uploadJSONToPinata(metadata);
     }
 

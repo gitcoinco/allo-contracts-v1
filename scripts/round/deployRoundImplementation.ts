@@ -18,12 +18,14 @@ export async function main() {
     "RoundImplementation"
   );
   const contract = await contractFactory.deploy();
+  const resp = contract.deploymentTransaction();
+  const address = await contract.getAddress();
 
-  console.log(`Deploying RoundImplementation to ${contract.address}`);
-  await contract.deployTransaction.wait(getBlocksToWait(hre.network.name));
+  console.log(`Deploying RoundImplementation to ${address}`);
+  await resp.wait(getBlocksToWait(hre.network.name));
   console.log("✅ Deployed");
 
-  return contract.address;
+  return address;
 }
 
 // We recommend this pattern to be able to use async/await everywhere

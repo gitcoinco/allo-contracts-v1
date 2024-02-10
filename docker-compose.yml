@@ -1,0 +1,21 @@
+services:
+  local-chain:
+    image: ghcr.io/foundry-rs/foundry:nightly-b174c3a4f80938636f18b3c9e49d45e6643f64a9
+    ports:
+      - "127.0.0.1:8545:8545"
+    entrypoint: ["anvil", "--host", "0.0.0.0", "--chain-id", "313371"]
+
+  allo-v1-setup:
+    image: allo-v1-setup
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    depends_on:
+      - local-chain
+    environment:
+      # account at index 0 of the test mnemonic
+      - DEPLOYER_PRIVATE_KEY=0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80
+      - DEV_CHAIN_HOST=local-chain
+      - DEV_CHAIN_ID=313371
+    restart: "no"
+    entrypoint: [ "bash", "-c", "sleep 2 && corepack enable && exec ./docker/deploy-contracts.sh"]

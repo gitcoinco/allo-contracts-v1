@@ -22,11 +22,12 @@ export async function main() {
     `Deploying Upgradable MerklePayoutStrategyFactory to ${contract.address}`
   );
 
-  await contract.deployTransaction.wait(getBlocksToWait(hre.network.name));
+  const resp = contract.deploymentTransaction();
+  await resp.wait(getBlocksToWait(hre.network.name));
 
   console.log("✅ Deployed.");
 
-  return contract.address;
+  return await contract.getAddress();
 }
 
 main().catch((error) => {

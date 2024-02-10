@@ -17,14 +17,16 @@ export async function main() {
     "MerklePayoutStrategyImplementation"
   );
   const contract = await contractFactory.deploy();
+  const resp = contract.deploymentTransaction();
+  const address = await contract.getAddress();
 
   console.log(
-    `Deploying MerklePayoutStrategyImplementation to ${contract.address}`
+    `Deploying MerklePayoutStrategyImplementation to ${address}`
   );
-  await contract.deployTransaction.wait(getBlocksToWait(hre.network.name));
+  await resp.wait(getBlocksToWait(hre.network.name));
   console.log("✅ Deployed");
 
-  return contract.address;
+  return address;
 }
 
 // We recommend this pattern to be able to use async/await everywhere

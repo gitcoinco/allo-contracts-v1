@@ -27,7 +27,9 @@ time pnpm run set-protocol-fee dev && \
 time pnpm run deploy-round-factory dev && \
 time pnpm run deploy-round-implementation dev && \
 time pnpm run link-round-implementation dev && \
-time pnpm run link-allo-settings dev
+time pnpm run link-allo-settings dev && \
+
+echo "🟢 Allo V1 deployed and populated"
 
 # pnpm run create-program dev
 # pnpm run create-qf-contract dev

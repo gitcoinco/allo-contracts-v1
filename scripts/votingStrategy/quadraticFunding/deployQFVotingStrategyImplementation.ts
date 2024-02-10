@@ -18,11 +18,11 @@ export async function main() {
     "QuadraticFundingVotingStrategyImplementation"
   );
   const contract = await contractFactory.deploy();
+  const resp = contract.deploymentTransaction();
+  const address = await contract.getAddress();
 
-  console.log(
-    `Deploying QuadraticFundingVotingStrategyImplementation to ${contract.address}`
-  );
-  await contract.deployTransaction.wait(hre.network.name);
+  console.log(`Deploying QuadraticFundingVotingStrategyImplementation to ${address}`);
+  await resp.wait(getBlocksToWait(hre.network.name));
   console.log("✅ Deployed.");
 
   return contract.address;

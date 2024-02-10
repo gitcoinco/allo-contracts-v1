@@ -16,13 +16,15 @@ export async function main() {
   // Deploy RoundImplementation
   const contractFactory = await ethers.getContractFactory("AlloSettings");
   const contract = await upgrades.deployProxy(contractFactory);
+  const resp = contract.deploymentTransaction();
+  const address = await contract.getAddress();
 
-  console.log(`Deploying Upgradable AlloSettings to ${contract.address}`);
+  console.log(`Deploying Upgradable AlloSettings to ${address}`);
 
-  await contract.deployTransaction.wait(getBlocksToWait(hre.network.name));
+  await resp.wait(getBlocksToWait(hre.network.name));
   console.log("✅ Deployed.");
 
-  return contract.address;
+  return address;
 }
 
 main().catch((error) => {

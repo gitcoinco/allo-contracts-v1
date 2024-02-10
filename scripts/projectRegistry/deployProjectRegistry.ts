@@ -20,28 +20,32 @@ async function main() {
   accountAddress = await account.getAddress();
   const balance = await ethers.provider.getBalance(accountAddress);
 
-  console.log(`This script deploys the ProjectRegistry contract on ${networkName}`);
+  console.log(
+    `This script deploys the ProjectRegistry contract on ${networkName}`
+  );
 
   await confirmContinue({
     contract: "ProjectRegistry",
     chainId: network.chainId,
     network: network.name,
     account: accountAddress,
-    balance: prettyNum(balance.toString())
+    balance: prettyNum(balance.toString()),
   });
-  
+
   console.log("Deploying ProjectRegistry...");
 
-  const ProjectRegistry = await ethers.getContractFactory("ProjectRegistry", account);
+  const ProjectRegistry = await ethers.getContractFactory(
+    "ProjectRegistry",
+    account
+  );
   const instance = await upgrades.deployProxy(ProjectRegistry, []);
-  console.log("tx hash", instance.deployTransaction.hash);
-  await instance.deployed();
+  const resp = instance.deploymentTransaction();
 
-  const rec = await instance.deployTransaction.wait();
+  const rec = await resp.wait();
   const gas = prettyNum(rec.gasUsed.toString());
-  console.log(`gas used: ${gas}`)
+  console.log(`gas used: ${gas}`);
 
-  console.log("ProjectRegistry deployed to:", instance.address);
+  console.log("ProjectRegistry deployed to:", await instance.getAddress());
 }
 
 main().catch((error) => {
