@@ -29,5 +29,3 @@ RUN corepack enable
 RUN pnpm hardhat compile
 
 EXPOSE 8545/tcp
-
-ENTRYPOINT ./docker/start-chain.sh
