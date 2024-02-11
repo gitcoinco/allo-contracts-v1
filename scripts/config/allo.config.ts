@@ -9,7 +9,7 @@ type DeployParams = Record<string, AlloSettingsParams>;
 
 export const AlloSettingsParams: DeployParams = {
   dev: {
-    alloSettingsContract: "0x59b670e9fA9D0A427751Af201D676719a970857b",
+    alloSettingsContract: "0x3Aa5ebB10DC797CAC828524e59A333d0A371443c",
     newProtocolFeePercentage: 0,
     newProtocolTreasury: "",
   },

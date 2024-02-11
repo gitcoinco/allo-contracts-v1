@@ -17,17 +17,16 @@ export async function main() {
     "DirectPayoutStrategyFactory"
   );
   const contract = await upgrades.deployProxy(contractFactory);
+  const address = await contract.getAddress();
 
-  console.log(
-    `Deploying Upgradable DirectPayoutStrategyFactory to ${contract.address}`
-  );
+  console.log(`Deploying Upgradable DirectPayoutStrategyFactory to ${address}`);
 
   const resp = contract.deploymentTransaction();
   await resp.wait(getBlocksToWait(hre.network.name));
 
   console.log("✅ Deployed.");
 
-  return await contract.getAddress();
+  return await address;
 }
 
 main().catch((error) => {

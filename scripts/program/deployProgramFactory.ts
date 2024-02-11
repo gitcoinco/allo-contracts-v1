@@ -15,15 +15,16 @@ export async function main() {
   // Deploy ProgramFactory
   const contractFactory = await ethers.getContractFactory("ProgramFactory");
   const contract = await upgrades.deployProxy(contractFactory, []);
+  const address = await contract.getAddress();
 
-  console.log(`Deploying Upgradable ProgramFactory to ${contract.address}`);
+  console.log(`Deploying Upgradable ProgramFactory to ${address}`);
 
   const resp = contract.deploymentTransaction();
   await resp.wait(getBlocksToWait(hre.network.name));
 
   console.log("✅ Deployed.");
 
-  return await contract.getAddress();
+  return address;
 }
 
 main().catch((error) => {

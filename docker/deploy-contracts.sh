@@ -3,8 +3,6 @@ export SKIP_CONFIRMATIONS=true
 TIMEFORMAT='(🟢 %3R seconds)';
 
 time pnpm run deploy-project-registry dev && \
-time pnpm hardhat run scripts/dev/populate/projects.ts --network dev && \
-\
 time pnpm run deploy-program-factory dev && \
 time pnpm run deploy-program-implementation dev && \
 time pnpm run link-program-implementation dev && \

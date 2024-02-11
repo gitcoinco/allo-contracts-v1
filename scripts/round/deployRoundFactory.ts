@@ -16,15 +16,16 @@ export async function main() {
   // Deploy RoundImplementation
   const contractFactory = await ethers.getContractFactory("RoundFactory");
   const contract = await upgrades.deployProxy(contractFactory);
+  const address = await contract.getAddress();
 
-  console.log(`Deploying Upgradable RoundFactory to ${contract.address}`);
+  console.log(`Deploying Upgradable RoundFactory to ${address}`);
 
   const resp = contract.deploymentTransaction();
   await resp.wait(getBlocksToWait(hre.network.name));
 
   console.log("✅ Deployed.");
 
-  return await contract.getAddress();
+  return address;
 }
 
 main().catch((error) => {

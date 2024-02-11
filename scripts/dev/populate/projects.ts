@@ -51,8 +51,6 @@ async function main() {
   console.log(`🟡 Creating projects (pinataBaseUrl ${pinataBaseUrl})`);
   const network = hre.network;
 
-  const [account1] = await ethers.getSigners();
-
   if (hre.network.name !== "dev") {
     console.error("This script can only be use in local dev environments");
     process.exit(1);
@@ -82,9 +80,11 @@ async function main() {
       metadata.logoImg = logoCid;
       metadata.bannerImg = bannerCid;
       metadataCid = await uploadJSONToPinata(metadata);
+      console.log("Created project", metadata.title);
     }
 
-    await projectRegistry.connect(account1).createProject({
+    console.log(`Creating project ${i}...`);
+    await projectRegistry.createProject({
       protocol: 1,
       pointer: metadataCid,
     });

@@ -17,17 +17,16 @@ export async function main() {
     "MerklePayoutStrategyFactory"
   );
   const contract = await upgrades.deployProxy(contractFactory);
+  const address = await contract.getAddress();
 
-  console.log(
-    `Deploying Upgradable MerklePayoutStrategyFactory to ${contract.address}`
-  );
+  console.log(`Deploying Upgradable MerklePayoutStrategyFactory to ${address}`);
 
   const resp = contract.deploymentTransaction();
   await resp.wait(getBlocksToWait(hre.network.name));
 
   console.log("✅ Deployed.");
 
-  return await contract.getAddress();
+  return address;
 }
 
 main().catch((error) => {

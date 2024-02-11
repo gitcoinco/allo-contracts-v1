@@ -18,16 +18,17 @@ export async function main() {
     "QuadraticFundingVotingStrategyFactory"
   );
   const contract = await upgrades.deployProxy(contractFactory);
+  const address = await contract.getAddress();
 
   console.log(
-    `Deploying Upgradable QuadraticFundingVotingStrategyFactory to ${contract.address}`
+    `Deploying Upgradable QuadraticFundingVotingStrategyFactory to ${address}`
   );
 
   const resp = contract.deploymentTransaction();
   await resp.wait(getBlocksToWait(hre.network.name));
   console.log("✅ Deployed.");
 
-  return await contract.getAddress();
+  return address;
 }
 
 main().catch((error) => {
