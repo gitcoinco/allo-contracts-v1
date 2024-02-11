@@ -80,7 +80,6 @@ async function main() {
       metadata.logoImg = logoCid;
       metadata.bannerImg = bannerCid;
       metadataCid = await uploadJSONToPinata(metadata);
-      console.log("Created project", metadata.title);
     }
 
     console.log(`Creating project ${i}...`);
