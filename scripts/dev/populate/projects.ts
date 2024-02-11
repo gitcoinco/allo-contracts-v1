@@ -58,7 +58,6 @@ async function main() {
     process.exit(1);
   }
 
-  console.log("This script populates the local chain");
   const projectRegistry = await ethers.getContractAt(
     "ProjectRegistry",
     "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0"

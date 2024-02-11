@@ -11,7 +11,7 @@ ENV PATH="$PNPM_HOME:$PATH"
 RUN corepack enable
 RUN pnpm install
 
-FROM node:16-bullseye-slim as prod
+FROM node:20-slim as prod
 RUN apt-get update && \
     apt-get install -y curl git && \
     apt-get clean  -y && \
