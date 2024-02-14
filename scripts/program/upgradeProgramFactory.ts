@@ -12,10 +12,9 @@ utils.assertEnvironment();
 const config = {
   currentContract: "ProgramFactory", // needed only for forceful import
   newContract: "ProgramFactory",
-}
+};
 
 export async function main() {
-
   const network = hre.network;
 
   const networkParams = programParams[network.name];
@@ -23,26 +22,27 @@ export async function main() {
     throw new Error(`Invalid network ${network.name}`);
   }
 
-  if (config.currentContract == '' || config.newContract == '') {
+  if (config.currentContract == "" || config.newContract == "") {
     console.log("error: config is missing values");
     return;
   }
 
   const proxyAddress = networkParams.programFactoryContract;
-  const implementationAddress = await upgrades.erc1967.getImplementationAddress(proxyAddress);
+  const implementationAddress = await upgrades.erc1967.getImplementationAddress(
+    proxyAddress
+  );
   const adminAddress = await upgrades.erc1967.getAdminAddress(proxyAddress);
 
   await confirmContinue({
-    "contract"  : "Upgrading ProgramFactory to new version",
-    "currentContract": config.currentContract,
-    "newContract": config.newContract,
-    "network"   : hre.network.name,
-    "chainId"   : hre.network.config.chainId,
-    "proxyAddress": proxyAddress,
-    "implementationAddress": implementationAddress,
-    "adminAddress": adminAddress,
+    contract: "Upgrading ProgramFactory to new version",
+    currentContract: config.currentContract,
+    newContract: config.newContract,
+    network: hre.network.name,
+    chainId: hre.network.config.chainId,
+    proxyAddress: proxyAddress,
+    implementationAddress: implementationAddress,
+    adminAddress: adminAddress,
   });
-  
 
   // const currentProgramFactory = await ethers.getContractFactory(config.currentContract);
 
@@ -56,17 +56,22 @@ export async function main() {
 
   const newProgramFactory = await ethers.getContractFactory(config.newContract);
 
-  const newContract = await upgrades.upgradeProxy(proxyAddress, newProgramFactory);
+  const newContract = await upgrades.upgradeProxy(
+    proxyAddress,
+    newProgramFactory
+  );
   console.log("ProgramFactory upgraded");
 
-  console.log("Version: "+ await newContract.VERSION());
+  console.log("Version: " + (await newContract.VERSION()));
 
   console.log(`ProgramFactory is now upgraded. Check ${proxyAddress}`);
 
   return newContract.address;
 }
 
-main().catch((error) => {
-  console.error(error);
-  process.exitCode = 1;
-});
+if (require.main === module) {
+  main().catch((error) => {
+    console.error(error);
+    process.exitCode = 1;
+  });
+}

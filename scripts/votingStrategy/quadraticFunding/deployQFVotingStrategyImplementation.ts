@@ -21,14 +21,18 @@ export async function main() {
   const resp = contract.deploymentTransaction();
   const address = await contract.getAddress();
 
-  console.log(`Deploying QuadraticFundingVotingStrategyImplementation to ${address}`);
+  console.log(
+    `Deploying QuadraticFundingVotingStrategyImplementation to ${address}`
+  );
   await resp.wait(getBlocksToWait(hre.network.name));
   console.log("✅ Deployed.");
 
-  return contract.address;
+  return address;
 }
 
-main().catch((error) => {
-  console.error(error);
-  process.exitCode = 1;
-});
+if (require.main === module) {
+  main().catch((error) => {
+    console.error(error);
+    process.exitCode = 1;
+  });
+}

@@ -2,13 +2,15 @@
 import { ethers } from "hardhat";
 import hre from "hardhat";
 import { confirmContinue } from "../../utils/script-utils";
-import { programParams } from '../config/program.config';
+import { programParams } from "../config/program.config";
 import * as utils from "../utils";
 
 utils.assertEnvironment();
 
-export async function main(programFactoryContract?: string, programImplementationContract?: string) {
-
+export async function main(
+  programFactoryContract?: string,
+  programImplementationContract?: string
+) {
   const network = hre.network;
 
   const networkParams = programParams[network.name];
@@ -32,24 +34,34 @@ export async function main(programFactoryContract?: string, programImplementatio
     throw new Error(`error: missing programImplementationContract`);
   }
 
-  const programFactory = await ethers.getContractAt('ProgramFactory', programFactoryContract);
-  
+  const programFactory = await ethers.getContractAt(
+    "ProgramFactory",
+    programFactoryContract
+  );
+
   await confirmContinue({
-    "contract"                       : "ProgramFactory",
-    "programFactoryContract"         : programFactoryContract,
-    "programImplementationContract"  : programImplementationContract,
-    "network"                        : network.name,
-    "chainId"                        : network.config.chainId
+    contract: "ProgramFactory",
+    programFactoryContract: programFactoryContract,
+    programImplementationContract: programImplementationContract,
+    network: network.name,
+    chainId: network.config.chainId,
   });
 
-  // Update ProgramImplementation 
-  const updateTx = await programFactory.updateProgramContract(programImplementationContract)
+  // Update ProgramImplementation
+  const updateTx = await programFactory.updateProgramContract(
+    programImplementationContract
+  );
   await updateTx.wait();
 
-  console.log("✅ ProgramImplementation Contract Linked to ProgramFactory contract", updateTx.hash);
+  console.log(
+    "✅ ProgramImplementation Contract Linked to ProgramFactory contract",
+    updateTx.hash
+  );
 }
 
-main().catch((error) => {
-  console.error(error);
-  process.exitCode = 1;
-});
+if (require.main === module) {
+  main().catch((error) => {
+    console.error(error);
+    process.exitCode = 1;
+  });
+}

@@ -2,7 +2,7 @@ import hre, { ethers, upgrades } from "hardhat";
 import { LedgerSigner } from "@anders-t/ethers-ledger";
 import { confirmContinue, prettyNum } from "../../utils/script-utils";
 
-async function main() {
+export async function main() {
   const network = await ethers.provider.getNetwork();
   const networkName = await hre.network.name;
   let account;
@@ -40,15 +40,20 @@ async function main() {
   );
   const instance = await upgrades.deployProxy(ProjectRegistry, []);
   const resp = instance.deploymentTransaction();
+  const address = await instance.getAddress();
 
   const rec = await resp.wait();
   const gas = prettyNum(rec.gasUsed.toString());
   console.log(`gas used: ${gas}`);
 
-  console.log("ProjectRegistry deployed to:", await instance.getAddress());
+  console.log("ProjectRegistry deployed to:", address);
+
+  return address;
 }
 
-main().catch((error) => {
-  console.error(error);
-  process.exitCode = 1;
-});
+if (require.main === module) {
+  main().catch((error) => {
+    console.error(error);
+    process.exitCode = 1;
+  });
+}

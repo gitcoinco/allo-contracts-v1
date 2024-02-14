@@ -3,14 +3,13 @@
 import { ethers } from "hardhat";
 import hre from "hardhat";
 import { confirmContinue } from "../../../utils/script-utils";
-import { DirectPayoutParams } from '../../config/payoutStrategy.config';
-import { AlloSettingsParams } from '../../config/allo.config';
+import { DirectPayoutParams } from "../../config/payoutStrategy.config";
+import { AlloSettingsParams } from "../../config/allo.config";
 import * as utils from "../../utils";
 
 utils.assertEnvironment();
 
 export async function main() {
-
   const network = hre.network;
 
   const networkParams = DirectPayoutParams[network.name];
@@ -24,7 +23,6 @@ export async function main() {
   const payoutImplementationContract = networkParams.implementation;
   const alloSettingsContract = alloNetworkParams.alloSettingsContract;
 
-
   if (!payoutFactoryContract) {
     throw new Error(`error: missing factory`);
   }
@@ -37,16 +35,18 @@ export async function main() {
     throw new Error(`error: missing alloSettingsContract`);
   }
 
-  const DirectPayoutStrategyFactory = await ethers.getContractAt('DirectPayoutStrategyFactory', payoutFactoryContract);
+  const DirectPayoutStrategyFactory = await ethers.getContractAt(
+    "DirectPayoutStrategyFactory",
+    payoutFactoryContract
+  );
 
   await confirmContinue({
-    "info"                                        : "create a direct payout strategy contract",
-    "DirectPayoutStrategyFactoryContract"         : payoutFactoryContract,
-    "DirectPayoutStrategyImplementationContract"  : payoutImplementationContract,
-    "network"                                     : network.name,
-    "chainId"                                     : network.config.chainId
+    info: "create a direct payout strategy contract",
+    DirectPayoutStrategyFactoryContract: payoutFactoryContract,
+    DirectPayoutStrategyImplementationContract: payoutImplementationContract,
+    network: network.name,
+    chainId: network.config.chainId,
   });
-
 
   const payoutStrategyTx = await DirectPayoutStrategyFactory.create(
     alloSettingsContract,
@@ -59,7 +59,9 @@ export async function main() {
   let payoutStrategyAddress;
 
   if (receipt.events) {
-    const event = receipt.events.find(e => e.event === 'PayoutContractCreated');
+    const event = receipt.events.find(
+      (e) => e.event === "PayoutContractCreated"
+    );
     if (event && event.args) {
       payoutStrategyAddress = event.args.payoutContractAddress;
     }
@@ -69,7 +71,9 @@ export async function main() {
   console.log("✅ Direct Payout contract created: ", payoutStrategyAddress);
 }
 
-main().catch((error) => {
-  console.error(error);
-  process.exitCode = 1;
-});
+if (require.main === module) {
+  main().catch((error) => {
+    console.error(error);
+    process.exitCode = 1;
+  });
+}

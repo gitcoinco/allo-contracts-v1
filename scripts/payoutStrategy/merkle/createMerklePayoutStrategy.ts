@@ -1,15 +1,14 @@
-// This is a helper script to create a merkle payout contract. 
+// This is a helper script to create a merkle payout contract.
 // This should be created via the frontend and this script is meant to be used for quick test
 import { ethers } from "hardhat";
 import hre from "hardhat";
 import { confirmContinue } from "../../../utils/script-utils";
-import { MerklePayoutParams } from '../../config/payoutStrategy.config';
+import { MerklePayoutParams } from "../../config/payoutStrategy.config";
 import * as utils from "../../utils";
 
 utils.assertEnvironment();
 
 export async function main() {
-
   const network = hre.network;
 
   const networkParams = MerklePayoutParams[network.name];
@@ -20,7 +19,6 @@ export async function main() {
   const payoutFactoryContract = networkParams.factory;
   const payoutImplementationContract = networkParams.implementation;
 
-  
   if (!payoutFactoryContract) {
     throw new Error(`error: missing factory`);
   }
@@ -29,17 +27,18 @@ export async function main() {
     throw new Error(`error: missing implementation`);
   }
 
+  const MerklePayoutStrategyFactory = await ethers.getContractAt(
+    "MerklePayoutStrategyFactory",
+    payoutFactoryContract
+  );
 
-  const MerklePayoutStrategyFactory = await ethers.getContractAt('MerklePayoutStrategyFactory', payoutFactoryContract);
-  
   await confirmContinue({
-    "info"                                        : "create a merkle payout strategy contract",
-    "MerklePayoutStrategyFactoryContract"         : payoutFactoryContract,
-    "MerklePayoutStrategyImplementationContract"  : payoutImplementationContract,
-    "network"                                     : network.name,
-    "chainId"                                     : network.config.chainId
+    info: "create a merkle payout strategy contract",
+    MerklePayoutStrategyFactoryContract: payoutFactoryContract,
+    MerklePayoutStrategyImplementationContract: payoutImplementationContract,
+    network: network.name,
+    chainId: network.config.chainId,
   });
-
 
   const payoutStrategyTx = await MerklePayoutStrategyFactory.create();
 
@@ -47,7 +46,9 @@ export async function main() {
   let payoutStrategyAddress;
 
   if (receipt.events) {
-    const event = receipt.events.find(e => e.event === 'PayoutContractCreated');
+    const event = receipt.events.find(
+      (e) => e.event === "PayoutContractCreated"
+    );
     if (event && event.args) {
       payoutStrategyAddress = event.args.payoutContractAddress;
     }
@@ -57,7 +58,9 @@ export async function main() {
   console.log("✅ Merkle Payout contract created: ", payoutStrategyAddress);
 }
 
-main().catch((error) => {
-  console.error(error);
-  process.exitCode = 1;
-});
+if (require.main === module) {
+  main().catch((error) => {
+    console.error(error);
+    process.exitCode = 1;
+  });
+}

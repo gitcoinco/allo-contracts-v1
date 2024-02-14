@@ -44,7 +44,8 @@ export async function main(
   await confirmContinue({
     contract: "DirectPayoutStrategyFactory",
     directPayoutStrategyFactoryContract: directPayoutStrategyFactoryContract,
-    directPayoutStrategyImplementationContract: directPayoutStrategyImplementationContract,
+    directPayoutStrategyImplementationContract:
+      directPayoutStrategyImplementationContract,
     network: network.name,
     chainId: network.config.chainId,
   });
@@ -61,7 +62,9 @@ export async function main(
   );
 }
 
-main().catch((error) => {
-  console.error(error);
-  process.exitCode = 1;
-});
+if (require.main === module) {
+  main().catch((error) => {
+    console.error(error);
+    process.exitCode = 1;
+  });
+}

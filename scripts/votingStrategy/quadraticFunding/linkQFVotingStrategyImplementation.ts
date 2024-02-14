@@ -2,13 +2,15 @@
 import { ethers } from "hardhat";
 import hre from "hardhat";
 import { confirmContinue } from "../../../utils/script-utils";
-import { QFVotingParams } from '../../config/votingStrategy.config';
+import { QFVotingParams } from "../../config/votingStrategy.config";
 import * as utils from "../../utils";
 
 utils.assertEnvironment();
 
-export async function main(quadraticFundingVotingStrategyFactoryContract?: string, quadraticFundingVotingStrategyImplementationContract?: string) {
-
+export async function main(
+  quadraticFundingVotingStrategyFactoryContract?: string,
+  quadraticFundingVotingStrategyImplementationContract?: string
+) {
   const network = hre.network;
 
   const networkParams = QFVotingParams[network.name];
@@ -21,36 +23,53 @@ export async function main(quadraticFundingVotingStrategyFactoryContract?: strin
   }
 
   if (!quadraticFundingVotingStrategyImplementationContract) {
-    quadraticFundingVotingStrategyImplementationContract = networkParams.implementation;
+    quadraticFundingVotingStrategyImplementationContract =
+      networkParams.implementation;
   }
 
   if (!quadraticFundingVotingStrategyFactoryContract) {
-    throw new Error(`error: missing quadraticFundingVotingStrategyFactoryContract`);
+    throw new Error(
+      `error: missing quadraticFundingVotingStrategyFactoryContract`
+    );
   }
 
   if (!quadraticFundingVotingStrategyImplementationContract) {
-    throw new Error(`error: missing quadraticFundingVotingStrategyImplementationContract`);
+    throw new Error(
+      `error: missing quadraticFundingVotingStrategyImplementationContract`
+    );
   }
 
-  const quadraticFundingVotingStrategyFactory = await ethers.getContractAt('QuadraticFundingVotingStrategyFactory', quadraticFundingVotingStrategyFactoryContract);
-  
+  const quadraticFundingVotingStrategyFactory = await ethers.getContractAt(
+    "QuadraticFundingVotingStrategyFactory",
+    quadraticFundingVotingStrategyFactoryContract
+  );
+
   await confirmContinue({
-    "contract"                                : "QuadraticFundingVotingStrategyFactory",
-    "QFVotingStrategyFactoryContract"         : quadraticFundingVotingStrategyFactoryContract,
-    "QFVotingStrategyImplementationContract"  : quadraticFundingVotingStrategyImplementationContract,
-    "network"                                 : network.name,
-    "chainId"                                 : network.config.chainId
+    contract: "QuadraticFundingVotingStrategyFactory",
+    QFVotingStrategyFactoryContract:
+      quadraticFundingVotingStrategyFactoryContract,
+    QFVotingStrategyImplementationContract:
+      quadraticFundingVotingStrategyImplementationContract,
+    network: network.name,
+    chainId: network.config.chainId,
   });
 
-  // Update QuadraticFundingVotingStrategyImplementation 
-  const updateTx = await quadraticFundingVotingStrategyFactory.updateVotingContract(quadraticFundingVotingStrategyImplementationContract)
+  // Update QuadraticFundingVotingStrategyImplementation
+  const updateTx =
+    await quadraticFundingVotingStrategyFactory.updateVotingContract(
+      quadraticFundingVotingStrategyImplementationContract
+    );
   await updateTx.wait();
 
-  console.log("✅ QuadraticFundingVotingStrategyImplementation Contract Linked to QuadraticFundingVotingStrategyFactory contract");
+  console.log(
+    "✅ QuadraticFundingVotingStrategyImplementation Contract Linked to QuadraticFundingVotingStrategyFactory contract"
+  );
   console.log("Txn hash", updateTx.hash);
 }
 
-main().catch((error) => {
-  console.error(error);
-  process.exitCode = 1;
-});
+if (require.main === module) {
+  main().catch((error) => {
+    console.error(error);
+    process.exitCode = 1;
+  });
+}

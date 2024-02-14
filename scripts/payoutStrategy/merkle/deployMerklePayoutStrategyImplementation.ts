@@ -20,9 +20,7 @@ export async function main() {
   const resp = contract.deploymentTransaction();
   const address = await contract.getAddress();
 
-  console.log(
-    `Deploying MerklePayoutStrategyImplementation to ${address}`
-  );
+  console.log(`Deploying MerklePayoutStrategyImplementation to ${address}`);
   await resp.wait(getBlocksToWait(hre.network.name));
   console.log("✅ Deployed");
 
@@ -31,7 +29,9 @@ export async function main() {
 
 // We recommend this pattern to be able to use async/await everywhere
 // and properly handle errors.
-main().catch((error) => {
-  console.error(error);
-  process.exitCode = 1;
-});
+if (require.main === module) {
+  main().catch((error) => {
+    console.error(error);
+    process.exitCode = 1;
+  });
+}

@@ -2,13 +2,15 @@
 import { ethers } from "hardhat";
 import hre from "hardhat";
 import { confirmContinue } from "../../utils/script-utils";
-import { roundParams } from '../config/round.config';
+import { roundParams } from "../config/round.config";
 import * as utils from "../utils";
 
 utils.assertEnvironment();
 
-export async function main(roundFactoryContract?: string, roundImplementationContract?: string) {
-
+export async function main(
+  roundFactoryContract?: string,
+  roundImplementationContract?: string
+) {
   const network = hre.network;
 
   const networkParams = roundParams[network.name];
@@ -33,24 +35,34 @@ export async function main(roundFactoryContract?: string, roundImplementationCon
     throw new Error(`error: missing roundImplementationContract`);
   }
 
-  const roundFactory = await ethers.getContractAt('RoundFactory', roundFactoryContract);
-  
+  const roundFactory = await ethers.getContractAt(
+    "RoundFactory",
+    roundFactoryContract
+  );
+
   await confirmContinue({
-    "contract"                     : "RoundFactory",
-    "roundFactoryContract"         : roundFactoryContract,
-    "roundImplementationContract"  : roundImplementationContract,
-    "network"                      : network.name,
-    "chainId"                      : network.config.chainId
+    contract: "RoundFactory",
+    roundFactoryContract: roundFactoryContract,
+    roundImplementationContract: roundImplementationContract,
+    network: network.name,
+    chainId: network.config.chainId,
   });
 
-  // Update RoundImplementation 
-  const updateTx = await roundFactory.updateRoundImplementation(roundImplementationContract)
+  // Update RoundImplementation
+  const updateTx = await roundFactory.updateRoundImplementation(
+    roundImplementationContract
+  );
   await updateTx.wait();
 
-  console.log("✅ RoundImplementation Contract linked to Round Contract", updateTx.hash);
+  console.log(
+    "✅ RoundImplementation Contract linked to Round Contract",
+    updateTx.hash
+  );
 }
 
-main().catch((error) => {
-  console.error(error);
-  process.exitCode = 1;
-});
+if (require.main === module) {
+  main().catch((error) => {
+    console.error(error);
+    process.exitCode = 1;
+  });
+}

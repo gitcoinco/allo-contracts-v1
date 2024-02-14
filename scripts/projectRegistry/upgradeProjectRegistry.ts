@@ -5,13 +5,11 @@ import { projectRegistryParams } from "../config/projectRegistry.config";
 
 const PROXY_ADDRESS = undefined;
 
-async function main() {
+export async function main() {
   const network = await ethers.provider.getNetwork();
   const networkName = await hre.network.name;
   let account;
   let accountAddress;
-
-
 
   const networkParams = projectRegistryParams[network.name];
   if (!networkParams) {
@@ -24,7 +22,7 @@ async function main() {
     throw new Error(`error: missing PROXY_ADDRESS`);
   }
 
-  if(process.env.USE_HARDWARE_WALLET === "true") {
+  if (process.env.USE_HARDWARE_WALLET === "true") {
     // with hardware wallet
     console.log("Waiting for hardware wallet to connect...");
     account = new LedgerSigner(ethers.provider as any);
@@ -37,7 +35,9 @@ async function main() {
 
   const balance = await ethers.provider.getBalance(accountAddress);
 
-  console.log(`This script upgrades the ProjectRegistry contract to V2 on ${networkName}`);
+  console.log(
+    `This script upgrades the ProjectRegistry contract to V2 on ${networkName}`
+  );
 
   await confirmContinue({
     contract: "Upgrading ProjectRegistry",
@@ -50,8 +50,14 @@ async function main() {
 
   console.log("Upgrading...");
 
-  const ProjectRegistryV2 = await ethers.getContractFactory("ProjectRegistryV2", account);
-  const upgraded = await upgrades.upgradeProxy(PROXY_ADDRESS, ProjectRegistryV2);
+  const ProjectRegistryV2 = await ethers.getContractFactory(
+    "ProjectRegistryV2",
+    account
+  );
+  const upgraded = await upgrades.upgradeProxy(
+    PROXY_ADDRESS,
+    ProjectRegistryV2
+  );
   console.log("tx hash", upgraded.deployTransaction.hash);
   await upgraded.deployed();
 
@@ -61,7 +67,9 @@ async function main() {
   await upgraded.initialize(/* args */);
 }
 
-main().catch((error) => {
-  console.error(error);
-  process.exitCode = 1;
-});
+if (require.main === module) {
+  main().catch((error) => {
+    console.error(error);
+    process.exitCode = 1;
+  });
+}

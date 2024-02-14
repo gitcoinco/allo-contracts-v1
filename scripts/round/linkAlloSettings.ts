@@ -2,15 +2,17 @@
 import { ethers } from "hardhat";
 import hre from "hardhat";
 import { confirmContinue } from "../../utils/script-utils";
-import { roundParams } from '../config/round.config';
-import { AlloSettingsParams } from '../config/allo.config';
+import { roundParams } from "../config/round.config";
+import { AlloSettingsParams } from "../config/allo.config";
 
 import * as utils from "../utils";
 
 utils.assertEnvironment();
 
-export async function main(roundFactoryContract?: string, alloSettingsContract?: string) {
-
+export async function main(
+  roundFactoryContract?: string,
+  alloSettingsContract?: string
+) {
   const network = hre.network;
 
   const roundNetworkParams = roundParams[network.name];
@@ -36,24 +38,32 @@ export async function main(roundFactoryContract?: string, alloSettingsContract?:
     throw new Error(`error: missing alloSettingsContract`);
   }
 
-  const roundFactory = await ethers.getContractAt('RoundFactory', roundFactoryContract);
+  const roundFactory = await ethers.getContractAt(
+    "RoundFactory",
+    roundFactoryContract
+  );
 
   await confirmContinue({
-    "contract"                     : "RoundFactory",
-    "roundFactoryContract"         : roundFactoryContract,
-    "alloSettingsContract"         : alloSettingsContract,
-    "network"                      : network.name,
-    "chainId"                      : network.config.chainId
+    contract: "RoundFactory",
+    roundFactoryContract: roundFactoryContract,
+    alloSettingsContract: alloSettingsContract,
+    network: network.name,
+    chainId: network.config.chainId,
   });
 
   // Update alloSettingsContract
-  const updateTx = await roundFactory.updateAlloSettings(alloSettingsContract)
+  const updateTx = await roundFactory.updateAlloSettings(alloSettingsContract);
   await updateTx.wait();
 
-  console.log("✅ AlloSettingsContract Contract linked to Round Contract", updateTx.hash);
+  console.log(
+    "✅ AlloSettingsContract Contract linked to Round Contract",
+    updateTx.hash
+  );
 }
 
-main().catch((error) => {
-  console.error(error);
-  process.exitCode = 1;
-});
+if (require.main === module) {
+  main().catch((error) => {
+    console.error(error);
+    process.exitCode = 1;
+  });
+}
